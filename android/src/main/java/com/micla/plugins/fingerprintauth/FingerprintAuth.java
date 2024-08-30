@@ -2,10 +2,12 @@ package com.micla.plugins.fingerprintauth;
 
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
+import android.util.Base64;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +21,11 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
+
+import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 
 public class FingerprintAuth {
 
@@ -54,6 +60,36 @@ public class FingerprintAuth {
             keyGenerator.generateKey();
         } catch (IOException | CertificateException | NoSuchAlgorithmException | NoSuchProviderException | KeyStoreException | InvalidAlgorithmParameterException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void storeEncryptedData(Context context, String encryptedMessage, String PREFS_NAME) {
+        try {
+            SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("fp_plugin__secret_value", encryptedMessage);
+            editor.apply();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String loadSecret(Context context, String PREFS_NAME) {
+        try {
+            SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            String encryptedMessageStr = sharedPreferences.getString("fp_plugin__secret_value", null);
+
+            if (encryptedMessageStr == null) {
+                Log.e(TAG, "No data found for decryption");
+                return null;
+            }
+
+            return encryptedMessageStr;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

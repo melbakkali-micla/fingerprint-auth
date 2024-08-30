@@ -17,7 +17,7 @@ npx cap sync
 * [`available()`](#available)
 * [`authenticate()`](#authenticate)
 * [`encrypt(...)`](#encrypt)
-* [`decrypt(...)`](#decrypt)
+* [`decrypt()`](#decrypt)
 * [Interfaces](#interfaces)
 
 </docgen-index>
@@ -81,17 +81,13 @@ Encrypts a given string using the user's fingerprint for encryption key manageme
 --------------------
 
 
-### decrypt(...)
+### decrypt()
 
 ```typescript
-decrypt(parms: { value: string; }) => Promise<{ decryptedMessage: string; }>
+decrypt() => Promise<{ decryptedMessage: string; }>
 ```
 
 Decrypts a previously encrypted string using the user's fingerprint for decryption key management.
-
-| Param       | Type                            | Description                                                  |
-| ----------- | ------------------------------- | ------------------------------------------------------------ |
-| **`parms`** | <code>{ value: string; }</code> | - An object containing the encrypted string to be decrypted. |
 
 **Returns:** <code>Promise&lt;{ decryptedMessage: string; }&gt;</code>
 

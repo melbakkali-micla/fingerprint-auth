@@ -21,7 +21,8 @@ import com.jesusm.kfingerprintmanager.KFingerprintManager;
 public class FingerprintAuthPlugin extends Plugin {
 
     private static String TAG = "FingerprintAuthPlugin";
-    private static String KEY_NAME = "capfingerprintauth";
+    private static String KEY_NAME = "capFingerprintEncryptionKey";
+    private static String PREFS_NAME = "capFingerprintSecurePrefs";
 
     KFingerprintManager KfingerprintManager;
     KeyguardManager keyguardManager;
@@ -101,13 +102,7 @@ public class FingerprintAuthPlugin extends Plugin {
             }
 
             @Override
-            public void onSuccessWithManualPassword(String s) {
-                String error = "Using password for this operation is not allowed";
-
-                vibrate(300);
-                Log.e(TAG, error);
-                call.reject(error);
-            }
+            public void onSuccessWithManualPassword(String s) {}
 
             @Override
             public void onFingerprintNotAvailable() {
@@ -162,6 +157,8 @@ public class FingerprintAuthPlugin extends Plugin {
         KFingerprintManager.EncryptionCallback encryptionAuthenticatedCallback = new KFingerprintManager.EncryptionCallback() {
             @Override
             public void onEncryptionSuccess(String encryptedMessage) {
+                fingerprintAuth.storeEncryptedData(getContext(), encryptedMessage, PREFS_NAME);
+
                 res.put("encryptedMessage", encryptedMessage);
                 call.resolve(res);
             }
@@ -204,7 +201,7 @@ public class FingerprintAuthPlugin extends Plugin {
             }
         };
 
-        String messageToEncrypt = call.getString("value", "HELLO WORLD");
+        String messageToEncrypt = call.getString("value");
 
         if(messageToEncrypt == null) {
             call.reject("Value to encrypt is not valid");
@@ -270,8 +267,7 @@ public class FingerprintAuthPlugin extends Plugin {
             }
         };
 
-        String messageToDecrypt = call.getString("value");
-
+        String messageToDecrypt = fingerprintAuth.loadSecret(getContext(), PREFS_NAME);
         if(messageToDecrypt == null) {
             call.reject("Value to decrypt is not valid");
             return;

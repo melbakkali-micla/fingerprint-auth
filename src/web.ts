@@ -17,8 +17,7 @@ export class FingerprintAuthWeb extends WebPlugin implements FingerprintAuthPlug
     console.table(parms);
     throw new Error('Method not implemented.');
   }
-  decrypt(parms: { value: string; }): Promise<{ decryptedMessage: string; }> {
-    console.table(parms);
+  decrypt(): Promise<{ decryptedMessage: string; }> {
     throw new Error('Method not implemented.');
   }
 }

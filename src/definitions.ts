@@ -51,5 +51,5 @@ export interface FingerprintAuthPlugin {
    * @param parms.value - The encrypted string value to be decrypted.
    * @returns A Promise that resolves to an object containing the decrypted message.
    */
-  decrypt(parms: { value: string }): Promise<{ decryptedMessage: string }>;
+  decrypt(): Promise<{ decryptedMessage: string }>;
 }
