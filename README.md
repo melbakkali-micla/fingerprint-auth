@@ -1,6 +1,6 @@
 # fingerprint-auth
 
-Fingerprint authentication using legacy Fingerprint Manager class
+Fingerprint authentication using legacy Fingerprint Manager class for Android OS
 
 ## Install
 
